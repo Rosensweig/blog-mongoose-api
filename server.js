@@ -10,6 +10,14 @@ const {Blog} = require ('./models');
 const app = express();
 app.use(bodyParser.json());
 
+app.get('/newblog/:title/:content', (req,res) => {
+	Blog.create({title:req.params.title, content:req.params.content}, function(err,data){
+		if(!err){
+			res.send(data);
+		}
+	});
+});
+
 app.get('/blog', (req, res) => {
 	Blog.find().exec()
 	.then(blogPosts => {
@@ -71,14 +79,14 @@ app.put('/blog/:id', (req, res) => {
 		}
 	});
 
-	Blog.findbyIdAndUpdate(req.params.id, {$set: toUpdate})
+	Blog.findByIdAndUpdate(req.params.id, {$set: toUpdate})
 	.exec()
 	.then(blogPost => res.status(204).end())
 	.catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
-app.delete('blog/:id', (req, res) => {
-	Blog.findbyIdAndRemove(req.params.id)
+app.delete('/blog/:id', (req, res) => {
+	Blog.findByIdAndRemove(req.params.id)
 	.exec()
 	.then(blogPost => res.status(204).end())
 	.catch(err => res.status(500).json({message: 'Internal server error.'}));
