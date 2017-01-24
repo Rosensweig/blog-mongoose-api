@@ -14,16 +14,15 @@ blogSchema.virtual('authorName').get(function() {
 	return `${this.author.firstName} ${this.author.lastName}`
 });
 
-blogSchema.virtual('created').get(function() {
-	return this.timestamps.createdAt;
-});
-
 blogSchema.methods.apiRepr = function() {
 	return {
 		title: this.title,
 		content: this.content,
 		author: this.authorName,
-		created: this.created,
+		created: this.timestamps.createdAt,
 		id: this._id
 	};
-};
+}
+
+const Blog = mongoose.model('Blog', blogSchema);
+module.exports = {Blog};
